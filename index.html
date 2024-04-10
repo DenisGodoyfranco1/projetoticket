@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+    <div class="logo">
+        <img src="caminho_para_seu_logo.png" alt="Logo da Empresa">
+    </div>
+    <h1>Tear Soluções</h1>
+</header>
+
+<div class="ticket">
+    <h2>Ticket de Ajuda</h2>
+    <form id="ticketForm" action="#" method="post">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required>
+
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" required>
+        <span id="emailError" class="error-message"></span>
+
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+            <option value="Pendente">Pendente</option>
+        </select>
+
+        <label for="prazo">Prazo:</label>
+        <input type="date" id="prazo" name="prazo" required>
+
+        <label for="prioridade">Prioridade:</label>
+        <select id="prioridade" name="prioridade">
+            <option value="baixa">Baixa</option>
+            <option value="media">Média</option>
+            <option value="alta">Alta</option>
+        </select>
+        <span id="prioridadeError" class="error-message"></span>
+
+        <label for="descricao">Descrição:</label>
+        <textarea id="descricao" name="descricao" required></textarea>
+
+        <label for="anexo">Anexo:</label>
+        <input type="file" id="anexo" name="anexo">
+        <div id="anexoError" class="error-message"></div> <!-- Div para exibir mensagens de erro -->
+
+        <label for="semAnexo">Não há anexo:</label>
+        <input type="checkbox" id="semAnexo" name="semAnexo">
+
+        <label for="responsavel">Responsável:</label>
+        <select id="responsavel" name="responsavel">
+            <option value="Denis">Denis</option>
+            <option value="Haron">Haron</option>
+            <option value="Matheus">Matheus</option>
+        </select>
+
+        <input type="submit" value="Enviar">
+        <button type="button" onclick="sair()">Sair</button>
+    </form>
+
+    <div id="paginaAgradecimento" style="display: none;">
+        <h2>Obrigado por enviar o ticket!</h2>
+        <p>Seu ticket foi recebido com sucesso.</p>
+        <p>Em breve entraremos em contato.</p>
+    </div>
+</div>
+
+<script>
+    document.getElementById("ticketForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        var fileInput = document.getElementById('anexo');
+        var semAnexoCheckbox = document.getElementById('semAnexo');
+
+        // Se o anexo é obrigatório e nenhum arquivo foi selecionado
+        if (!fileInput.files.length && !semAnexoCheckbox.checked) {
+            document.getElementById("anexoError").innerText = "Por favor, adicione um anexo ou marque a opção 'Não há anexo'.";
+            return;
+        }
+
+        // Validação do anexo
+        var allowedExtensions = /(\.jpg|\.png|\.pdf)$/i;
+        if (fileInput.value && !allowedExtensions.exec(fileInput.value)) {
+            document.getElementById("anexoError").innerText = "Formato de arquivo inválido. Por favor, selecione um arquivo JPG, PNG ou PDF.";
+            return;
+        }
+
+        var prazo = document.getElementById("prazo").value;
+        if (!prazo) {
+            document.getElementById("prazo").setCustomValidity("Por favor, preencha este campo.");
+            return;
+        }
+
+        // Restante do código para enviar o formulário
+        var nome = document.getElementById("nome").value;
+        var email = document.getElementById("email").value;
+        var status = document.getElementById("status").value;
+        var prioridade = document.getElementById("prioridade").value;
+        var descricao = document.getElementById("descricao").value;
+        var anexo = fileInput.value; // Alterado para pegar o valor do input file ou da marcação de 'Sem Anexo'
+        var responsavel = document.getElementById("responsavel").value;
+
+        var ticket = {
+            nome: nome,
+            email: email,
+            status: status,
+            prazo: prazo,
+            prioridade: prioridade,
+            descricao: descricao,
+            anexo: anexo,
+            responsavel: responsavel
+        };
+
+        var tickets = JSON.parse(sessionStorage.getItem('tickets')) || [];
+        tickets.push(ticket);
+        sessionStorage.setItem('tickets', JSON.stringify(tickets));
+
+        document.getElementById("ticketForm").style.display = "none";
+        document.getElementById("paginaAgradecimento").style.display = "block";
+
+        setTimeout(function() {
+            window.location.href = "outra_pagina.html";
+        }, 3000);
+    });
+</script>
+</body>
+</html>

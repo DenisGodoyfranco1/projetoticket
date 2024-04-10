@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tickets Enviados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            margin-top: 0;
+        }
+        .ticket {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .ticket h3 {
+            margin-top: 0;
+        }
+        .ticket p {
+            margin: 5px 0;
+        }
+        .ticket hr {
+            margin-top: 10px;
+            margin-bottom: 0;
+            border: none;
+            border-top: 1px solid #ddd;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Tickets Enviados</h2>
+        <div id="ticketList">
+            <!-- Aqui serão exibidos os tickets enviados -->
+        </div>
+
+        <div class="button-container">
+            <button onclick="voltarParaIndex()">Voltar para a página inicial</button>
+        </div>
+    </div>
+
+    <script>
+        // Recupera os dados dos tickets enviados da sessionStorage
+        var tickets = JSON.parse(sessionStorage.getItem('tickets'));
+
+        // Verifica se existem tickets armazenados
+        if (tickets && tickets.length > 0) {
+            // Exibe os tickets na página
+            var ticketListDiv = document.getElementById('ticketList');
+            tickets.forEach(function(ticket) {
+                var ticketDiv = document.createElement('div');
+                ticketDiv.classList.add('ticket');
+                ticketDiv.innerHTML = `
+                    <h3>Nome: ${ticket.nome}</h3>
+                    <p>Email: ${ticket.email}</p>
+                    <p>Status: ${ticket.status}</p>
+                    <p>Prazo: ${ticket.prazo}</p>
+                    <p>Prioridade: ${ticket.prioridade}</p>
+                    <p>Descrição: ${ticket.descricao}</p>
+                    <p>Anexo: <a href="${ticket.anexo}" target="blank">Abir imagem</a></p>
+                    <p>Responsável: ${ticket.responsavel}</p>
+                    <hr>
+                `;
+                ticketListDiv.appendChild(ticketDiv);
+            });
+        } else {
+            // Se não houver tickets armazenados, exibe uma mensagem indicando que não há tickets enviados
+            document.getElementById('ticketList').innerHTML = '<p>Não há tickets enviados.</p>';
+        }
+
+        // Função para voltar para a página inicial
+        function voltarParaIndex() {
+            window.location.href = "index.html"; // Substitua "index.html" pelo nome do seu arquivo inicial, se necessário
+        }
+    </script>
+</body>
+</html>
